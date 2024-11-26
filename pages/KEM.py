@@ -1,5 +1,5 @@
 import streamlit as st
-from algorithms.KEM import B64, FernetKEM
+from algorithms.KEM import B64
 
 st.set_page_config(page_title="Key Encapsulation Mechanisms", page_icon="🔑")
 

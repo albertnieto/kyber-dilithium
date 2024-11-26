@@ -2,7 +2,7 @@ def sphincs_plus_sign(message):
     """
     Signs a message using the SPHINCS+ algorithm.
     """
-    import pyspx.shake256_128f as sphincs
+    import pyspx.shake_128f as sphincs
     import os
 
     # Generate key pair
@@ -18,7 +18,7 @@ def sphincs_plus_verify(message, signature_hex, public_key_hex):
     """
     Verifies a SPHINCS+ signature.
     """
-    import pyspx.shake256_128f as sphincs
+    import pyspx.shake_128f as sphincs
     from binascii import unhexlify
 
     signature = unhexlify(signature_hex)
