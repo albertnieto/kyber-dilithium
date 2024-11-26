@@ -1,5 +1,5 @@
 import streamlit as st
-from algorithms.DSA import SHA256, Ed25519
+from algorithms.DSA import SHA256
 from pqcrypto.sign import (
     dilithium2,
     dilithium3,

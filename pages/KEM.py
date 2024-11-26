@@ -1,6 +1,6 @@
 import streamlit as st
 from secrets import compare_digest
-from algorithms.KEM import B64, FernetKEM
+from algorithms.KEM import B64
 from pqcrypto.kem import (
     mceliece8192128,
     kyber512,
