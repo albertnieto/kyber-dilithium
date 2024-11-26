@@ -2,3 +2,4 @@ streamlit
 pqcrypto 
 PySPX
 cryptography
+pkgutil

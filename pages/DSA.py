@@ -1,5 +1,7 @@
 import streamlit as st
 import importlib
+import pkgutil
+import pqcrypto.sign
 
 st.set_page_config(page_title="Digital Signature Standards", page_icon="✍️")
 
@@ -18,8 +20,9 @@ def main():
             ["SHA-256 Hashing", "Ed25519"]
         )
     else:
-        from pqcrypto import sign
-        pq_algorithms = sign.__all__
+        # Dynamically list all available post-quantum signature algorithms
+        package = pqcrypto.sign
+        pq_algorithms = [name for _, name, _ in pkgutil.iter_modules(package.__path__)]
         algorithm_choice = st.selectbox(
             "Select Post-Quantum Digital Signature Algorithm",
             pq_algorithms
@@ -53,6 +56,7 @@ def main():
                             st.error("Signature is invalid.")
             else:
                 try:
+                    # Dynamically import the selected algorithm module
                     pq_module = importlib.import_module(f'pqcrypto.sign.{algorithm_choice}')
                     public_key, secret_key = pq_module.generate_keypair()
                     signature = pq_module.sign(secret_key, message.encode('utf-8'))

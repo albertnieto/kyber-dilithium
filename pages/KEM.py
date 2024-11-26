@@ -1,5 +1,7 @@
 import streamlit as st
 import importlib
+import pkgutil
+import pqcrypto.kem
 
 st.set_page_config(page_title="Key Encapsulation Mechanisms", page_icon="🔑")
 
@@ -18,8 +20,9 @@ def main():
             ["Base64 Symmetric Key", "Fernet Symmetric Key"]
         )
     else:
-        from pqcrypto import kem
-        pq_algorithms = kem.__all__
+        # Dynamically list all available post-quantum KEM algorithms
+        package = pqcrypto.kem
+        pq_algorithms = [name for _, name, _ in pkgutil.iter_modules(package.__path__)]
         algorithm_choice = st.selectbox(
             "Select Post-Quantum KEM Algorithm",
             pq_algorithms
@@ -39,6 +42,7 @@ def main():
                 st.code(key)
         else:
             try:
+                # Dynamically import the selected algorithm module
                 pq_module = importlib.import_module(f'pqcrypto.kem.{algorithm_choice}')
                 from secrets import compare_digest
 
