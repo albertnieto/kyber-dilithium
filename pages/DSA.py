@@ -1,5 +1,57 @@
 import streamlit as st
-import importlib
+from algorithms.DSA import SHA256, Ed25519
+from pqcrypto.sign import (
+    dilithium2,
+    dilithium3,
+    dilithium4,
+    falcon_512,
+    falcon_1024,
+    rainbowIa_classic,
+    rainbowIa_cyclic,
+    rainbowIa_cyclic_compressed,
+    rainbowIIIc_classic,
+    rainbowIIIc_cyclic,
+    rainbowIIIc_cyclic_compressed,
+    rainbowVc_classic,
+    rainbowVc_cyclic,
+    rainbowVc_cyclic_compressed,
+    sphincs_haraka_128f_robust,
+    sphincs_haraka_128f_simple,
+    sphincs_haraka_128s_robust,
+    sphincs_haraka_128s_simple,
+    sphincs_haraka_192f_robust,
+    sphincs_haraka_192f_simple,
+    sphincs_haraka_192s_robust,
+    sphincs_haraka_192s_simple,
+    sphincs_haraka_256f_robust,
+    sphincs_haraka_256f_simple,
+    sphincs_haraka_256s_robust,
+    sphincs_haraka_256s_simple,
+    sphincs_sha256_128f_robust,
+    sphincs_sha256_128f_simple,
+    sphincs_sha256_128s_robust,
+    sphincs_sha256_128s_simple,
+    sphincs_sha256_192f_robust,
+    sphincs_sha256_192f_simple,
+    sphincs_sha256_192s_robust,
+    sphincs_sha256_192s_simple,
+    sphincs_sha256_256f_robust,
+    sphincs_sha256_256f_simple,
+    sphincs_sha256_256s_robust,
+    sphincs_sha256_256s_simple,
+    sphincs_shake256_128f_robust,
+    sphincs_shake256_128f_simple,
+    sphincs_shake256_128s_robust,
+    sphincs_shake256_128s_simple,
+    sphincs_shake256_192f_robust,
+    sphincs_shake256_192f_simple,
+    sphincs_shake256_192s_robust,
+    sphincs_shake256_192s_simple,
+    sphincs_shake256_256f_robust,
+    sphincs_shake256_256f_simple,
+    sphincs_shake256_256s_robust,
+    sphincs_shake256_256s_simple
+)
 
 st.set_page_config(page_title="Digital Signature Standards", page_icon="✍️")
 
@@ -82,12 +134,10 @@ def main():
         if message.strip():
             if crypto_type == "Pre-Quantum":
                 if algorithm_choice == "SHA-256 Hashing":
-                    from algorithms.DSA import SHA256
                     signature = SHA256.demo_signature_algorithm(message)
                     st.success("Signature (SHA-256 Hash):")
                     st.code(signature)
                 elif algorithm_choice == "Ed25519":
-                    from algorithms.DSA import Ed25519
                     signature_hex, verify_key_hex = Ed25519.ed25519_sign(message)
                     st.success("Message signed using Ed25519.")
                     st.write("**Signature (hex):**")
@@ -104,7 +154,8 @@ def main():
                             st.error("Signature is invalid.")
             else:
                 try:
-                    pq_module = importlib.import_module(f'pqcrypto.sign.{algorithm_choice}')
+                    # Import the selected algorithm directly
+                    pq_module = getattr(sign, algorithm_choice)
                     public_key, secret_key = pq_module.generate_keypair()
                     signature = pq_module.sign(secret_key, message.encode('utf-8'))
 
@@ -120,6 +171,8 @@ def main():
                             st.success("Signature is valid.")
                         else:
                             st.error("Signature is invalid.")
+                except AttributeError:
+                    st.error(f"Algorithm {algorithm_choice} not found in pqcrypto.sign.")
                 except Exception as e:
                     st.error(f"Error: {e}")
         else:

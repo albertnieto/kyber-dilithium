@@ -1,5 +1,34 @@
 import streamlit as st
-import importlib
+from secrets import compare_digest
+from algorithms.KEM import B64, FernetKEM
+from pqcrypto.kem import (
+    mceliece8192128,
+    kyber512,
+    kyber768,
+    kyber1024,
+    ntruhps2048509,
+    ntruhps2048677,
+    ntruhps4096821,
+    ntruhrss701,
+    saber,
+    firesaber,
+    frodokem1344aes,
+    frodokem1344shake,
+    frodokem640aes,
+    frodokem640shake,
+    frodokem976aes,
+    frodokem976shake,
+    lightsaber,
+    mceliece348864,
+    mceliece348864f,
+    mceliece460896,
+    mceliece460896f,
+    mceliece6688128,
+    mceliece6688128f,
+    mceliece6960119,
+    mceliece6960119f,
+    mceliece8192128f,
+)
 
 st.set_page_config(page_title="Key Encapsulation Mechanisms", page_icon="🔑")
 
@@ -18,6 +47,7 @@ def main():
             ["Base64 Symmetric Key", "Fernet Symmetric Key"]
         )
     else:
+        # List of Post-Quantum KEM Algorithms
         pq_algorithms = [
             "mceliece8192128",
             "kyber512",
@@ -45,6 +75,7 @@ def main():
             "mceliece6960119",
             "mceliece6960119f",
             "mceliece8192128f",
+            # Add other algorithms as needed
         ]
 
         algorithm_choice = st.selectbox(
@@ -55,20 +86,17 @@ def main():
     if st.button("Generate Key"):
         if crypto_type == "Pre-Quantum":
             if algorithm_choice == "Base64 Symmetric Key":
-                from algorithms.KEM import B64
                 key = B64.demo_kem_algorithm()
                 st.success("Generated Key:")
                 st.code(key)
             elif algorithm_choice == "Fernet Symmetric Key":
-                from algorithms.KEM import FernetKEM
                 key = FernetKEM.fernet_kem()
                 st.success("Generated Fernet Key:")
                 st.code(key)
         else:
             try:
-                pq_module = importlib.import_module(f'pqcrypto.kem.{algorithm_choice}')
-                from secrets import compare_digest
-
+                # Import the selected algorithm directly
+                pq_module = getattr(locals()[algorithm_choice], algorithm_choice)
                 public_key, secret_key = pq_module.generate_keypair()
                 ciphertext, shared_secret_enc = pq_module.encrypt(public_key)
                 shared_secret_dec = pq_module.decrypt(secret_key, ciphertext)
@@ -87,6 +115,8 @@ def main():
                     st.success("Shared secrets match!")
                 else:
                     st.error("Shared secrets do not match.")
+            except AttributeError:
+                st.error(f"Algorithm {algorithm_choice} not found in pqcrypto.kem.")
             except Exception as e:
                 st.error(f"Error: {e}")
 
