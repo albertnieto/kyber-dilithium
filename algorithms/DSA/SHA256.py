@@ -1,5 +1,3 @@
-# algorithms/digital_signature.py
-
 def demo_signature_algorithm(message):
     """
     Simulates a Digital Signature algorithm.

@@ -1,5 +1,3 @@
-# algorithms/key_encapsulation.py
-
 def demo_kem_algorithm():
     """
     Simulates a Key Encapsulation Mechanism (KEM) algorithm.
