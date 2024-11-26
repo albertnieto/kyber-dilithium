@@ -1,6 +1,15 @@
+# app.py
+
 import streamlit as st
 
-st.title("🎈 My new app")
-st.write(
-    "Let's start building! For help and inspiration, head over to [docs.streamlit.io](https://docs.streamlit.io/)."
+st.set_page_config(
+    page_title="Cryptography Demo App",
+    page_icon="🔐",
+    layout="centered",
+    initial_sidebar_state="expanded",
 )
+
+st.title("🎈 Cryptography Demo App")
+
+st.write("Welcome to the Cryptography Demo App!")
+st.write("Use the sidebar to navigate between different cryptographic demonstrations.")
