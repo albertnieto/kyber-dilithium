@@ -1,7 +1,5 @@
 import streamlit as st
 import importlib
-import pkgutil
-import pqcrypto.sign
 
 st.set_page_config(page_title="Digital Signature Standards", page_icon="✍️")
 
@@ -20,9 +18,59 @@ def main():
             ["SHA-256 Hashing", "Ed25519"]
         )
     else:
-        # Dynamically list all available post-quantum signature algorithms
-        package = pqcrypto.sign
-        pq_algorithms = [name for _, name, _ in pkgutil.iter_modules(package.__path__)]
+        pq_algorithms = [
+            "dilithium2",
+            "dilithium3",
+            "dilithium4",
+            "falcon_512",
+            "falcon_1024",
+            "rainbowIa_classic",
+            "rainbowIa_cyclic",
+            "rainbowIa_cyclic_compressed",
+            "rainbowIIIc_classic",
+            "rainbowIIIc_cyclic",
+            "rainbowIIIc_cyclic_compressed",
+            "rainbowVc_classic",
+            "rainbowVc_cyclic",
+            "rainbowVc_cyclic_compressed",
+            "sphincs_haraka_128f_robust",
+            "sphincs_haraka_128f_simple",
+            "sphincs_haraka_128s_robust",
+            "sphincs_haraka_128s_simple",
+            "sphincs_haraka_192f_robust",
+            "sphincs_haraka_192f_simple",
+            "sphincs_haraka_192s_robust",
+            "sphincs_haraka_192s_simple",
+            "sphincs_haraka_256f_robust",
+            "sphincs_haraka_256f_simple",
+            "sphincs_haraka_256s_robust",
+            "sphincs_haraka_256s_simple",
+            "sphincs_sha256_128f_robust",
+            "sphincs_sha256_128f_simple",
+            "sphincs_sha256_128s_robust",
+            "sphincs_sha256_128s_simple",
+            "sphincs_sha256_192f_robust",
+            "sphincs_sha256_192f_simple",
+            "sphincs_sha256_192s_robust",
+            "sphincs_sha256_192s_simple",
+            "sphincs_sha256_256f_robust",
+            "sphincs_sha256_256f_simple",
+            "sphincs_sha256_256s_robust",
+            "sphincs_sha256_256s_simple",
+            "sphincs_shake256_128f_robust",
+            "sphincs_shake256_128f_simple",
+            "sphincs_shake256_128s_robust",
+            "sphincs_shake256_128s_simple",
+            "sphincs_shake256_192f_robust",
+            "sphincs_shake256_192f_simple",
+            "sphincs_shake256_192s_robust",
+            "sphincs_shake256_192s_simple",
+            "sphincs_shake256_256f_robust",
+            "sphincs_shake256_256f_simple",
+            "sphincs_shake256_256s_robust",
+            "sphincs_shake256_256s_simple"
+        ]
+
         algorithm_choice = st.selectbox(
             "Select Post-Quantum Digital Signature Algorithm",
             pq_algorithms
@@ -56,7 +104,6 @@ def main():
                             st.error("Signature is invalid.")
             else:
                 try:
-                    # Dynamically import the selected algorithm module
                     pq_module = importlib.import_module(f'pqcrypto.sign.{algorithm_choice}')
                     public_key, secret_key = pq_module.generate_keypair()
                     signature = pq_module.sign(secret_key, message.encode('utf-8'))
