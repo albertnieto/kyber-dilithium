@@ -7,21 +7,33 @@ def main():
     st.title("🔑 Key Encapsulation Mechanisms")
     st.write("This page demonstrates Key Encapsulation Mechanisms (KEM).")
 
-    # Picklist to select the KEM algorithm
-    algorithm_choice = st.selectbox(
-        "Select KEM Algorithm",
-        ["Base64 Symmetric Key", "Fernet Symmetric Key"]
+    cryptography_type = st.selectbox(
+        "Select Cryptography Type",
+        ["Pre-Quantum", "Post-Quantum"]
     )
 
+    if cryptography_type == "Pre-Quantum":
+        algorithm_options = ["Base64 Symmetric Key"]
+    else:
+        algorithm_options = []
+
+    if cryptography_type == "Pre-Quantum":
+        algorithm_choice = st.selectbox(
+            "Select KEM Algorithm",
+            algorithm_options
+        )
+    else:
+        st.info("No post-quantum KEM algorithms available yet.")
+        algorithm_choice = None
+
     if st.button("Generate Key"):
-        if algorithm_choice == "Base64 Symmetric Key":
-            key = B64.demo_kem_algorithm()
-            st.success("Generated Key:")
-            st.code(key)
-        elif algorithm_choice == "Fernet Symmetric Key":
-            key = FernetKEM.fernet_kem()
-            st.success("Generated Fernet Key:")
-            st.code(key)
+        if cryptography_type == "Pre-Quantum":
+            if algorithm_choice == "Base64 Symmetric Key":
+                key = B64.demo_kem_algorithm()
+                st.success("Generated Key:")
+                st.code(key)
+        elif cryptography_type == "Post-Quantum":
+            st.error("No post-quantum KEM algorithms available yet.")
 
 if __name__ == "__main__":
     main()
